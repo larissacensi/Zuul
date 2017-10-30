@@ -25,20 +25,34 @@ public class Game
     private void createRooms()
     {
         Room outside, theatre, pub, lab, office;
-      
+        Item table, chair, tv;
+        //create the Itens
+        table = new Item("Uma mesa", 50);
+        chair = new Item("Uma cadeira", 20);
+        tv = new Item("Uma TV", 15);
+        
         // create the rooms
         outside = new Room("fora da entrada principal da universidade");
         theatre = new Room("em um auditório");
-        pub = new Room("na cantina do campus");
-        lab = new Room("em um laboratório de informática");
-        office = new Room("na sala dos professores");
+        pub = new Room("na cantina do campus", table);
+        lab = new Room("em um laboratório de informática", chair);
+        office = new Room("na sala dos professores", tv);
         
         // initialise room exits
-        outside.setExits(null, theatre, lab, pub);
-        theatre.setExits(null, null, null, outside);
-        pub.setExits(null, outside, null, null);
-        lab.setExits(outside, office, null, null);
-        office.setExits(null, null, null, lab);
+
+      
+        outside.setExits("leste",theatre);
+        outside.setExits("sul",lab);
+        outside.setExits("oeste",pub);
+        
+        theatre.setExits("oeste",outside);
+        
+        pub.setExits("leste",outside);
+        
+        lab.setExits("norte",outside);
+        lab.setExits("leste",office);
+        
+
 
         currentRoom = outside;  // Começa o jogo fora 
     }
@@ -95,7 +109,13 @@ public class Game
             goRoom(command);
         else if (commandWord.equals("sair"))
             wantToQuit = quit(command);
-
+        else if(commandWord.equals("examinar")){
+            look();
+        }
+        else if(commandWord.equals("comer")){
+            comer();
+        }
+        
         return wantToQuit;
     }
 
@@ -108,11 +128,13 @@ public class Game
      */
     private void printHelp() 
     {
+        CommandWords CW = new CommandWords();
         System.out.println("Você está perdido. Você está só. Você caminha");
         System.out.println("pela universidade.");
         System.out.println();
         System.out.println("Seus comandos são:");
-        System.out.println("   ir_para sair ajuda");
+        System.out.println("ir_para sair ajuda");
+        System.out.println(" " + parser.getCommandList());
     }
 
     /** 
@@ -130,7 +152,7 @@ public class Game
         String direction = command.getSecondWord();
 
         // Try to leave current room.
-        Room nextRoom = currentRoom(direction);
+        Room nextRoom = null;
        
         if (nextRoom == null) {
             System.out.println("Não há uma porta!");
@@ -158,7 +180,17 @@ public class Game
     }
     
     private void printLocationInfo(){
-        System.out.println("Você está " + currentRoom.getDescription());
-        System.out.println(currentRoom.getExitString());
+        System.out.println(currentRoom.getLongDescription());
     }
+    
+    private void look(){
+        printLocationInfo();
+    }
+    
+    private void comer(){
+        System.out.println("Você comeu agora e não está mais com fome");
+    }
+    
+    
+    
 }

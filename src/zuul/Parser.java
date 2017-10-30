@@ -1,5 +1,6 @@
 package zuul;
 
+import java.util.Arrays;
 import java.util.Scanner;
 
 /**
@@ -47,6 +48,7 @@ public class Parser
         // Agora checa se esta palavra é conhecida. Caso positivo, cria um
         // comando com ela. Se não, cria um comando "null" 
         // (para comando desconhecido).
+        
         if(commands.isCommand(word1)) {
             return new Command(word1, word2);
         }
@@ -54,4 +56,11 @@ public class Parser
             return new Command(null, word2); 
         }
     }
+    
+    
+    public String getCommandList()
+    {
+        return commands.getCommandList();
+    }
+    
 }
